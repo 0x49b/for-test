@@ -53,23 +53,15 @@
                 switch (e.data.name) {
                     case "testForEach":
                         foreach.innerText = e.data.time + "ms";
-                        mean.foreach += e.data.time;
-                        finished++;
                         break;
                     case "testForIn":
                         forin.innerText = e.data.time + "ms";
-                        mean.forin += e.data.time;
-                        finished++;
                         break;
                     case "testForLoop":
                         forloop.innerText = e.data.time + "ms";
-                        mean.forloop += e.data.time;
-                        finished++;
                         break;
                     case "testForOf":
                         forof.innerText = e.data.time + "ms";
-                        mean.forof += e.data.time;
-                        finished++;
                         break;
                 }
             });
