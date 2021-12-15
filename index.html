@@ -50,7 +50,6 @@
         scrambleTests.forEach(t => {
             let worker = new Worker('worker.js', {type: 'module'});
             worker.addEventListener('message', e => {
-                console.log(e.data);
                 switch (e.data.name) {
                     case "testForEach":
                         foreach.innerText = e.data.time + "ms";

@@ -1,12 +1,10 @@
 import {testForEach, testForIn, testForLoop, testForOf} from "./tests.js";
 
 addEventListener('message', e => {
-
     const result = {
         name: e.data,
         time: 0
     }
-
     switch (e.data) {
         case "testForEach":
             result.time = testForEach();
