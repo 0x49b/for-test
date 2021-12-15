@@ -32,8 +32,6 @@
 </div>
 
 <script type="module">
-
-
     import {testForEach, testForIn, testForLoop, testForOf} from "./tests.js";
 
     const forloop = document.getElementById("forloop");
@@ -41,17 +39,29 @@
     const forof = document.getElementById("forof");
     const forin = document.getElementById("forin");
 
-
-    const scramble = arr => arr.sort(() => Math.random() - 0.5)
-
-
     const starttestbtn = document.getElementById("starttest");
-
     starttestbtn.addEventListener('click', _ => startTest());
 
-    const tests = ["testForLoop", "testForEach", "testForOf", "testForIn"];
+    const test10btn = document.getElementById("test10");
+    //test10btn.addEventListener('click', _ => test10Times());
 
-    function startTest() {
+
+    const tests = ["testForLoop", "testForEach", "testForOf", "testForIn"];
+    const scramble = arr => arr.sort(() => Math.random() - 0.5)
+
+    const mean = {
+        forloop: 0,
+        foreach: 0,
+        forof: 0,
+        forin: 0
+    }
+
+    let numStarts = 0;
+    let finished = 0
+
+    const startTest = _ => {
+
+
         const scrambleTests = scramble(tests);
         scrambleTests.forEach(t => {
             let worker = new Worker('worker.js', {type: 'module'});
@@ -60,20 +70,47 @@
                 switch (e.data.name) {
                     case "testForEach":
                         foreach.innerText = e.data.time + "ms";
+                        mean.foreach += e.data.time;
+                        finished++;
                         break;
                     case "testForIn":
                         forin.innerText = e.data.time + "ms";
+                        mean.forin += e.data.time;
+                        finished++;
                         break;
                     case "testForLoop":
                         forloop.innerText = e.data.time + "ms";
+                        mean.forloop += e.data.time;
+                        finished++;
                         break;
                     case "testForOf":
                         forof.innerText = e.data.time + "ms";
+                        mean.forof += e.data.time;
+                        finished++;
                         break;
                 }
             });
             worker.postMessage(t);
         });
+
+        numStarts++;
+
+
+
+        if (finished === 4) {
+
+
+            if (numStarts > 1) {
+                mean.forloop = Math.round(mean.forloop / numStarts);
+                mean.foreach = Math.round(mean.foreach / numStarts);
+                mean.forof = Math.round(mean.forof / numStarts);
+                mean.forin = Math.round(mean.forin / numStarts);
+                console.log(mean);
+            }
+            console.log(numStarts)
+        }
+        //console.log(mean)
+
     }
 
 
