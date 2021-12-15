@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>For Loop check</title>
+
+</head>
+<body>
+
+<h1>For Loop Tests</h1>
+
+<button id="starttest">start test</button>
+<div>
+    <table>
+        <tr>
+            <td>for</td>
+            <td><span id="forloop">n/a</span></td>
+        </tr>
+        <tr>
+            <td>forEach</td>
+            <td><span id="foreach">n/a</span></td>
+        </tr>
+        <tr>
+            <td>for of</td>
+            <td><span id="forof">n/a</span></td>
+        </tr>
+        <tr>
+            <td>for in</td>
+            <td><span id="forin">n/a</span></td>
+        </tr>
+    </table>
+</div>
+
+<script type="module">
+
+
+    import {testForEach, testForIn, testForLoop, testForOf} from "./tests.js";
+
+    const forloop = document.getElementById("forloop");
+    const foreach = document.getElementById("foreach");
+    const forof = document.getElementById("forof");
+    const forin = document.getElementById("forin");
+
+
+    const scramble = arr => arr.sort(() => Math.random() - 0.5)
+
+
+    const starttestbtn = document.getElementById("starttest");
+
+    starttestbtn.addEventListener('click', _ => startTest());
+
+    const tests = ["testForLoop", "testForEach", "testForOf", "testForIn"];
+
+    function startTest() {
+        const scrambleTests = scramble(tests);
+        scrambleTests.forEach(t => {
+            let worker = new Worker('worker.js', {type: 'module'});
+            worker.addEventListener('message', e => {
+                console.log(e.data);
+                switch (e.data.name) {
+                    case "testForEach":
+                        foreach.innerText = e.data.time + "ms";
+                        break;
+                    case "testForIn":
+                        forin.innerText = e.data.time + "ms";
+                        break;
+                    case "testForLoop":
+                        forloop.innerText = e.data.time + "ms";
+                        break;
+                    case "testForOf":
+                        forof.innerText = e.data.time + "ms";
+                        break;
+                }
+            });
+            worker.postMessage(t);
+        });
+    }
+
+
+</script>
+</body>
+</html>
